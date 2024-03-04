@@ -1,12 +1,13 @@
 
 
-const ErrorMessage = () => {
+import styles from './ErrorMessage.module.css';
 
-    return (
-        <div>
-            <p>Sorry, something go wrong, please try again</p>
-        </div>
-    )
+const ErrorMessage = () => {
+  return (
+    <div className={styles['error-message']}>
+      <p>Sorry, something go wrong, please try again</p>
+    </div>
+  );
 }
 
-export default ErrorMessage
+export default ErrorMessage;

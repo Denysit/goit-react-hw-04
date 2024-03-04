@@ -13,6 +13,7 @@ const fetchPhoto = async (searchQuery, page) => {
         query: searchQuery,
         per_page: 10,
         page,
+        orientation: "landscape",
       },
     });
     return response.data.results;

@@ -21,23 +21,9 @@ function App() {
   const [query, setQuery] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImageData, setSelectedImageData] = useState(null);
-
-  
-const openModal = (imageData) => {
-    setSelectedImageData(imageData);
-};
-
-useEffect(() => {
-    if (selectedImageData) {
-        setModalIsOpen(true);
-    }
-}, [selectedImageData]);
+  const [totalPages, setTotalPages] = useState(0);
 
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setSelectedImageData(null);
-  }
 
   useEffect(() => {
     if (query === "") {
@@ -51,6 +37,7 @@ useEffect(() => {
         setPhoto((prevPhoto) => {
           return [...prevPhoto, ...data];
         });
+        setTotalPages(data.total_pages);
       }
       catch (error) {
         setErrorMessage(true)
@@ -62,6 +49,7 @@ useEffect(() => {
     getPhoto();
   }, [query, page]);
 
+
   const handleSearch = (searchQuery) => {
     setQuery(searchQuery);
     setPage(1);
@@ -72,12 +60,30 @@ useEffect(() => {
     setPage(page + 1);
   };
 
+const openModal = (imageData) => {
+    setSelectedImageData(imageData);
+};
+
+useEffect(() => {
+    if (selectedImageData) {
+        setModalIsOpen(true);
+    }
+}, [selectedImageData]);
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedImageData(null);
+  }
+
+  const isLastPage = page >= totalPages;
+
+
   return (
     <div>
       <SearchBar onSubmit={handleSearch} />
       {photo.length > 0 && <ImageGallery dataPhotos={photo} openModal={openModal}/>}
       {errorMessage && (<ErrorMessage />)}
-      {photo.length > 0 && !loader && <LoadMoreButton loadMore={handleLoadMore} />}
+      {photo.length > 0 && !loader && !isLastPage && <LoadMoreButton loadMore={handleLoadMore} />}
       {loader && (<Loader />)}
        {photo.length > 0 && <ImageModal
         isOpen={modalIsOpen}
